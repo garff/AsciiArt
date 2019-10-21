@@ -1,0 +1,1253 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"all",
+				"allRows\tabc"
+			],
+			[
+				"asci",
+				"ascii\tabc"
+			],
+			[
+				"pal",
+				"palette.get(100\tabc"
+			],
+			[
+				"asc",
+				"asciiString\tabc"
+			],
+			[
+				"ascii",
+				"asciiString\tabc"
+			],
+			[
+				"Grap",
+				"Graphics2D\tabc"
+			],
+			[
+				"crea",
+				"createGraphics\t(Image.java)"
+			],
+			[
+				"create",
+				"createAsciiDrawingString\tabc"
+			],
+			[
+				"gra",
+				"graphics\tabc"
+			],
+			[
+				"Graphics",
+				"Graphics2D\tabc"
+			],
+			[
+				"getI",
+				"getImage\t(Image.java)"
+			],
+			[
+				"new",
+				"newImage\tabc"
+			],
+			[
+				"Gra",
+				"Graphics\tabc"
+			],
+			[
+				"cr",
+				"createAsciiString\tabc"
+			],
+			[
+				"wi",
+				"getWidth"
+			],
+			[
+				"dispa",
+				"displayImage\t(Image.java)"
+			],
+			[
+				"Clor",
+				"ColorSpace\t(Image.java)"
+			],
+			[
+				"colo",
+				"colorConverter\t(Image.java)"
+			],
+			[
+				"Graphi",
+				"Graphics2D\t(Palette.java)"
+			],
+			[
+				"Array",
+				"ArrayList\tabc"
+			],
+			[
+				"meas",
+				"meassures\tabc"
+			],
+			[
+				"me",
+				"meassures\tabc"
+			],
+			[
+				"as",
+				"ascii\tabc"
+			],
+			[
+				"mea",
+				"meassureAsciiChar\t(Main.java)"
+			],
+			[
+				"draw",
+				"drawStringOnBackground\tabc"
+			],
+			[
+				"background",
+				"background\tabc"
+			],
+			[
+				"m",
+				"meassure\tabc"
+			],
+			[
+				"pa",
+				"palette\tabc"
+			],
+			[
+				"backgr",
+				"backgroundWithString\tabc"
+			],
+			[
+				"G",
+				"Graphics2D\tabc"
+			],
+			[
+				"displa",
+				"displayImage\t(Image.java)"
+			],
+			[
+				"Color",
+				"ColorConvertOp\tabc"
+			],
+			[
+				"image",
+				"imageUrl\tabc"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"contents": "import java.io.IOException;\nimport java.awt.image.BufferedImage;\n\npublic class Main {\n\n\t/**\n\t*\tAscii art generator. Given an image url displays the same image on screen \n\t*\ttranslated into the most astounding art one has ever seen.\n\t*\t\n\t*\tFor fun and absolutely no profit.\n\t*\n\t*\t@author Mads Garff \n\t*/\n\n\tpublic static void main(String[] args) {\n\n\t\ttry {\n\t\t\tImage image = new Image(args[0]);\n\t\t\tPalette palette = new Palette();\n\t\t\tAscii ascii = new Ascii(palette.getPalette(), image);\n\t\t} catch (IOException e) {\n\t\t\te.printStackTrace();\n\t\t\tSystem.out.println(\"Failure: Something went wrong with the image file - maybe try another format?\\nRestart the program.\");\t\t\t\n\t\t}\n\t\t\n\t}\t\n\n}",
+			"file": "Main.java",
+			"file_size": 660,
+			"file_write_time": 132157887289822959,
+			"settings":
+			{
+				"buffer_size": 679,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "import java.util.*;\nimport java.awt.color.ColorSpace;\nimport java.awt.Color;\nimport java.awt.Font;\nimport java.awt.image.BufferedImage;\nimport java.awt.image.ColorConvertOp;\nimport java.awt.Graphics2D;\n\npublic class Ascii {\n\n\tprivate ArrayList<String> palette = null;\n\tprivate Image image = null;\n\tprivate BufferedImage asciiImage = null;\n\tprivate Graphics2D graphics = null;\n\n\t/**\n\t\tThis class handles the creation of the strings of ascii from the image supplied\n\t\tfrom the user. It also does the drawing of the created strings onto a new \n\t\tbuffered image called asciiImage. The newly drawn image can be return.\n\t*/ \n\tpublic Ascii(ArrayList<String> palette, Image image) {\n\t\tthis.palette = palette;\n\t\tthis.image = image;\n\t\tthis.image.convertImageToGrayscale();\n\t\tthis.asciiImage = new BufferedImage(image.getWidth()*5, (image.getHeight()*6)-25, BufferedImage.TYPE_INT_RGB); // multiplier with 7 - depends on fontsize - makes the image larger according to font and font size \n\t\tthis.graphics = asciiImage.createGraphics();\n\t\tthis.graphics.setPaint(new Color(255, 255, 255));\n\t\tthis.graphics.fillRect(0, 0, image.getWidth()*5, (image.getHeight()*6)-25); // same type of multiplier with 6 -makes image fit according to fontsize, font and linespacing \n\n\t\tString[] asciiRows = createAsciiString(this.palette, this.image);\n\t\t\n\t\tdrawAsciiString(asciiRows, this.graphics);\n\t\tthis.image.saveImage(this.asciiImage)\n\t}\n\n\t/**\n\t\tReturns an array of ascii strings from each of the rows of the image.\n\t*/\n\tprivate String[] createAsciiArray(ArrayList<String> palette, Image image) {\n\t\tString[] asciiRows = new String[image.getHeight()];\n\t\tString row = \"\";\n\t\tint count = 0;\n\t\tlong gray = 0;\n\n\t\tfor (int i = 0; i < image.getHeight(); i++) {\n\t\t\tfor (int j = 0; j < image.getWidth(); j++) {\n\t\t\t\tColor color = new Color(image.getPixel(j,i)); \n\t\t\t\t// takes greyscale values from 0-255 to between 0 - 100\n\t\t\t\tgray = Math.round((image.getPixel(j,i)& 0xFF) / 2.55);\n\t\t\t\t// inverts the values - otherwise white would be black and vice verca \n\t\t\t\trow = row + palette.get(100 - (int) gray); \n\t\t\t\tcount++;\n\t\t\t}\n\t\t\trows[i] = row;\n\t\t\tasciiRow = \"\"; \n\t\t}\n\t\treturn asciiRows;\n\t}\n\n\t/**\n\t\tDraws each of the ascii rows on to a fresh BufferedImage.\n\t*/\n\tprivate void drawAsciiString(String[] asciiRows, Graphics2D graphics) {\n\t\tint count = 0;\n\t\tint fontSize = 8;\n\t\tgraphics.setFont(new Font(\"Courier New\", Font.PLAIN, fontSize));\n\t\tgraphics.setColor(Color.black);\n\n\t\tfor (int i = 0; i < allRows.length; i++) {\n\t\t\t// multiply i with 6 for corect spacing between lines vertically on final image\n\t\t\tgraphics.drawString(allRows[i], 0, i*6); \n\t\t}\n\t}\n\n\t/**\n\t\tReturns the freshly drawn BufferedImage.\n\t*/\n\tpublic BufferedImage getAsciiImage() {\n\t\treturn this.asciiImage;\n\t}\n}",
+			"file": "Ascii.java",
+			"file_size": 2727,
+			"file_write_time": 132160690485390971,
+			"settings":
+			{
+				"buffer_size": 2733,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "Image.java",
+			"settings":
+			{
+				"buffer_size": 2209,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "import java.util.*;\nimport javax.swing.JFrame;\nimport javax.swing.JLabel;\nimport javax.swing.ImageIcon; \nimport java.awt.image.BufferedImage;\nimport java.awt.Graphics;\nimport java.awt.Graphics2D;\nimport java.awt.Font;\nimport java.awt.Color;\nimport java.util.Collections;\n\npublic class Palette {\n\n\tprivate ArrayList<Character> ascii = new ArrayList<Character>();\n\tprivate ArrayList<String> palette = new ArrayList<String>();\n\tprivate Color color = null;\n\tprivate BufferedImage background = null;\n\tprivate Graphics2D graphics = null;\n\n\tpublic Palette() {\n\t\tcreateBackground();\n\t\tcreateAsciiArray();\n\t\tcreatePalette();\n\t}\n\n\tprivate void createBackground() {\n\t\tthis.background = new BufferedImage(100,100, BufferedImage.TYPE_INT_RGB);\n\t\tthis.graphics = this.background.createGraphics();\n\t\tthis.graphics.setPaint(new Color(255,255,255));\n\t\tthis.graphics.fillRect(0,0,this.background.getWidth(), this.background.getHeight());\n\t}\n\n\t// consider deleting \n\tpublic void displayBackground() {\n\t\tJFrame frame = new JFrame();\n\t\tImageIcon icon = new ImageIcon(this.background);\n\t\tJLabel label = new JLabel(icon);\n\t\tframe.add(label);\n\t\tframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);\n\t\tframe.pack();\n\t\tframe.setVisible(true);\n\t}\n\n\tprivate void drawStringOnBackground(String str) {\n\t\tint fontSize = 90;\n\t\tthis.graphics.setPaint(new Color(255,255,255));\n\t\tthis.graphics.fillRect(0,0,this.background.getWidth(), this.background.getHeight());\n\t\tthis.graphics.setFont(new Font(\"Courier New\", Font.PLAIN, fontSize));\n\t\tthis.graphics.setColor(Color.black);\n\t\tthis.graphics.drawString(str,5,70);\n\t}\n\n\tprivate int asciiPixelCount() {\n\t\tint charPixelCount = 0;\n\t\tfor (int i = 0; i < this.background.getWidth(); i++) {\n\t\t\tfor (int j = 0; j < this.background.getHeight(); j++) {\n\t\t\t\tthis.color = new Color(this.background.getRGB(i,j));\n\t\t\t\tif (this.color.getRed() == 0) {\n\t\t\t\t\tcharPixelCount += 1;\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t\treturn charPixelCount;\n\t}\n\n\tprivate void createAsciiArray() {\n\t\tfor (int i = 32; i < 127; i++) {\n\t\t\tthis.ascii.add((char) i);\n\t\t}\n\t}\n\n\tprivate void createPalette() {\n\t\tArrayList<Integer> key = new ArrayList<Integer>();\n\t\tMap<Integer,String> asciiPixelCounts = new HashMap<Integer,String>();\n\n\t\tfor (int i = 0; i < this.ascii.size(); i++) {\n\t\t\t// Draw string on background must be called before asciipixelcounts, because otherwise its the same value everytime - a new thing has to be put on the background.\n\t\t\tdrawStringOnBackground(Character.toString(this.ascii.get(i)));\n\t\t\tasciiPixelCounts.put(asciiPixelCount(), Character.toString(this.ascii.get(i)));\t\t\t\t\n\t\t}\n\t\tfor (int pCount : asciiPixelCounts.keySet()) {\n\t\t\tkey.add(pCount);\n\t\t}\n\t\t\n\t\tCollections.sort(key);\n\n\t\tfor (int j = 0; j < key.size(); j++) {\n\t\t\tthis.palette.add(asciiPixelCounts.get(key.get(j)));\n\t\t}\n\n\t\tfor (int k = 0; k < 13; k++) {\n\t\t\tif (k < 7) {\n\t\t\t\tthis.palette.add(0, \" \");\n\t\t\t} else {\n\t\t\t\tthis.palette.add(\"M\");\n\t\t\t}\n\t\t}\n\t}\n\n\tpublic BufferedImage getBackground() {\n\t\treturn this.background;\n\t}\n\n\tpublic ArrayList<String> getPalette() {\n\t\treturn this.palette;\n\t}\n\n\tpublic ArrayList<Character> getAscii() {\n\t\treturn this.ascii;\n\t}\n\n}",
+			"file": "Palette.java",
+			"file_size": 3097,
+			"file_write_time": 132159781041477191,
+			"settings":
+			{
+				"buffer_size": 3097,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"pack",
+				"Install Package Control"
+			]
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 0.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/home/garff/Documents/programming projects/ascii"
+	],
+	"file_history":
+	[
+		"/home/garff/Documents/programming projects/ascii/Palette.java",
+		"/home/garff/Documents/programming projects/ascii/ascii.java",
+		"/home/garff/Documents/programming projects/ascii/image.java",
+		"/home/garff/Documents/programming projects/ascii/palette.java"
+	],
+	"find":
+	{
+		"height": 26.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"asciiRow",
+			"allRows",
+			"createAsciiDrawingString",
+			"newImage",
+			"asciiPixelCount",
+			"System",
+			"getHeight",
+			"getWidth",
+			"getHeight",
+			"getWidth",
+			"7",
+			"asciiString",
+			"this",
+			"]);\n"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 1,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "Main.java",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 679,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								637,
+								637
+							]
+						],
+						"settings":
+						{
+							"SL.39.region_keys":
+							[
+							],
+							"bracket_highlighter.busy": false,
+							"bracket_highlighter.clone": -1,
+							"bracket_highlighter.clone_locations":
+							{
+								"close":
+								{
+									"1":
+									[
+										469,
+										470
+									]
+								},
+								"icon":
+								{
+									"1":
+									[
+										"Packages/BracketHighlighter/icons/round_bracket.png",
+										"region.yellowish"
+									]
+								},
+								"open":
+								{
+									"1":
+									[
+										454,
+										455
+									]
+								},
+								"unmatched":
+								{
+								}
+							},
+							"bracket_highlighter.clone_regions":
+							[
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content"
+							],
+							"bracket_highlighter.locations":
+							{
+								"close":
+								{
+									"1":
+									[
+										659,
+										660
+									]
+								},
+								"icon":
+								{
+									"1":
+									[
+										"Packages/BracketHighlighter/icons/double_quote.png",
+										"region.greenish"
+									]
+								},
+								"open":
+								{
+									"1":
+									[
+										559,
+										560
+									]
+								},
+								"unmatched":
+								{
+								}
+							},
+							"bracket_highlighter.regions":
+							[
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content"
+							],
+							"git_gutter_is_enabled": false,
+							"syntax": "Packages/Java/Java.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "Ascii.java",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2733,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								587,
+								587
+							]
+						],
+						"settings":
+						{
+							"SL.15.region_keys":
+							[
+							],
+							"SL.48.region_keys":
+							[
+							],
+							"SL.53.region_keys":
+							[
+							],
+							"bracket_highlighter.busy": false,
+							"bracket_highlighter.clone": -1,
+							"bracket_highlighter.clone_locations":
+							{
+								"close":
+								{
+									"1":
+									[
+										2114,
+										2115
+									]
+								},
+								"icon":
+								{
+									"1":
+									[
+										"Packages/BracketHighlighter/icons/curly_bracket.png",
+										"region.purplish"
+									]
+								},
+								"open":
+								{
+									"1":
+									[
+										1757,
+										1758
+									]
+								},
+								"unmatched":
+								{
+								}
+							},
+							"bracket_highlighter.clone_regions":
+							[
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content"
+							],
+							"bracket_highlighter.locations":
+							{
+								"close":
+								{
+									"1":
+									[
+										2732,
+										2733
+									]
+								},
+								"icon":
+								{
+									"1":
+									[
+										"Packages/BracketHighlighter/icons/curly_bracket.png",
+										"region.purplish"
+									]
+								},
+								"open":
+								{
+									"1":
+									[
+										222,
+										223
+									]
+								},
+								"unmatched":
+								{
+								}
+							},
+							"bracket_highlighter.regions":
+							[
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content"
+							],
+							"git_gutter_is_enabled": false,
+							"syntax": "Packages/Java/Java.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 102.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
+			]
+		},
+		{
+			"selected": 1,
+			"sheets":
+			[
+				{
+					"buffer": 2,
+					"file": "Image.java",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2209,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1662,
+								1662
+							]
+						],
+						"settings":
+						{
+							"SL.15.region_keys":
+							[
+							],
+							"bracket_highlighter.busy": false,
+							"bracket_highlighter.clone": -1,
+							"bracket_highlighter.clone_locations":
+							{
+								"close":
+								{
+									"1":
+									[
+										1631,
+										1632
+									]
+								},
+								"icon":
+								{
+									"1":
+									[
+										"Packages/BracketHighlighter/icons/round_bracket.png",
+										"region.yellowish"
+									]
+								},
+								"open":
+								{
+									"1":
+									[
+										1620,
+										1621
+									]
+								},
+								"unmatched":
+								{
+								}
+							},
+							"bracket_highlighter.clone_regions":
+							[
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content"
+							],
+							"bracket_highlighter.locations":
+							{
+								"close":
+								{
+									"1":
+									[
+										1686,
+										1687
+									]
+								},
+								"icon":
+								{
+									"1":
+									[
+										"Packages/BracketHighlighter/icons/round_bracket.png",
+										"region.yellowish"
+									]
+								},
+								"open":
+								{
+									"1":
+									[
+										1661,
+										1662
+									]
+								},
+								"unmatched":
+								{
+								}
+							},
+							"bracket_highlighter.regions":
+							[
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content"
+							],
+							"git_gutter_is_enabled": false,
+							"syntax": "Packages/Java/Java.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "Palette.java",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3097,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1219,
+								1219
+							]
+						],
+						"settings":
+						{
+							"SL.20.region_keys":
+							[
+							],
+							"SL.21.region_keys":
+							[
+							],
+							"bracket_highlighter.busy": false,
+							"bracket_highlighter.clone": -1,
+							"bracket_highlighter.clone_locations":
+							{
+								"close":
+								{
+									"1":
+									[
+										1218,
+										1219
+									]
+								},
+								"icon":
+								{
+									"1":
+									[
+										"Packages/BracketHighlighter/icons/curly_bracket.png",
+										"region.purplish"
+									]
+								},
+								"open":
+								{
+									"1":
+									[
+										980,
+										981
+									]
+								},
+								"unmatched":
+								{
+								}
+							},
+							"bracket_highlighter.clone_regions":
+							[
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content"
+							],
+							"bracket_highlighter.locations":
+							{
+								"close":
+								{
+									"1":
+									[
+										1218,
+										1219
+									]
+								},
+								"icon":
+								{
+									"1":
+									[
+										"Packages/BracketHighlighter/icons/curly_bracket.png",
+										"region.purplish"
+									]
+								},
+								"open":
+								{
+									"1":
+									[
+										980,
+										981
+									]
+								},
+								"unmatched":
+								{
+								}
+							},
+							"bracket_highlighter.regions":
+							[
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content"
+							],
+							"git_gutter_is_enabled": false,
+							"syntax": "Packages/Java/Java.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 408.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 26.0
+	},
+	"input":
+	{
+		"height": 36.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			],
+			[
+				1,
+				0,
+				2,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			0.5,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.SublimeLinter":
+	{
+		"height": 0.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "ascii.sublime-project",
+	"replace":
+	{
+		"height": 48.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"ascii",
+				"Ascii.java"
+			],
+			[
+				"ma",
+				"Main.java"
+			],
+			[
+				"",
+				"Palette.java"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 150.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
